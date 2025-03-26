@@ -1,11 +1,11 @@
 import time
 
 NODE_BITS = 10
-SEQ_BITS = 12
+SEQUENCE = 12
 MAX_NODE_ID = (1 << NODE_BITS) - 1   # 1023
-MAX_SEQUENCE = (1 << SEQ_BITS) - 1   # 4095
-NODE_SHIFT = SEQ_BITS                # 12
-TIMESTAMP_SHIFT = NODE_BITS + SEQ_BITS  # 22
+MAX_SEQUENCE = (1 << SEQUENCE) - 1   # 4095
+NODE_SHIFT = SEQUENCE                # 12
+TIMESTAMP_SHIFT = NODE_BITS + SEQUENCE  # 22
 
 # State
 last_timestamp = -1
@@ -13,7 +13,7 @@ sequence = 0
 
 
 node_id = 1
-epoch = 1710000000000
+starting_time = 1710000000000
 
 def current_millis():
     return int(time.time() * 1000)
@@ -40,7 +40,7 @@ def generate_snowflake_id():
 
     last_timestamp = current_ts
 
-    return ((current_ts - epoch) << TIMESTAMP_SHIFT) | (node_id << NODE_SHIFT) | sequence))
+    return ((current_ts - starting_time) << TIMESTAMP_SHIFT) | (node_id << NODE_SHIFT) | sequence
 
 
 
