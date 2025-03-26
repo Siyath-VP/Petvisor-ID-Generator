@@ -60,5 +60,20 @@ class TestSnowflakeIDGenerator(unittest.TestCase):
         self.assertGreaterEqual(timestamp, starting_time)
         self.assertLessEqual(timestamp, int(time.time() * 1000))
 
+    def test_latency(self):
+        """Measure latency of generating 1000 IDs"""
+        iterations = 1000
+        start_time = time.perf_counter()
+        for _ in range(iterations):
+            generate_snowflake_id()
+        end_time = time.perf_counter()
+
+        total_ms = (end_time - start_time) * 1000
+        avg_us = (total_ms / iterations) * 1000
+
+        print(f" Latency Test Results:")
+        print(f" Total Time: {total_ms:.3f} ms for {iterations} IDs")
+        print(f" Average Latency per ID: {avg_us:.3f} µs")
+
 if __name__ == '__main__':
     unittest.main()

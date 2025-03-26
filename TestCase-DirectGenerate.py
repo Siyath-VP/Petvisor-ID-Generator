@@ -68,5 +68,20 @@ class TestThreadSnowflakeID(unittest.TestCase):
         self.assertGreaterEqual(timestamp, EPOCH, "Timestamp is below EPOCH!")
         self.assertLessEqual(timestamp, int(time.time() * 1000), "Timestamp is in the future!")
 
+    def test_latency(self):
+        """Measure the latency of generating 1000 Snowflake IDs"""
+        iterations = 1000
+        start = time.perf_counter()
+        for _ in range(iterations):
+            generate_snowflake_id()
+        end = time.perf_counter()
+
+        total_ms = (end - start) * 1000
+        avg_us = (total_ms / iterations) * 1000
+
+        print(f" Latency Test:")
+        print(f" Total Time: {total_ms:.3f} ms for {iterations} IDs")
+        print(f" Average Latency per ID: {avg_us:.3f} µs")
+
 if __name__ == "__main__":
     unittest.main()
