@@ -3,13 +3,13 @@ import threading
 
 # Bit allocations
 NODE_BITS = 10
-SEQUENCE = 12
+SEQUENCE_BITS = 12
 MAX_NODE_ID = (1 << NODE_BITS) - 1   # 1023
-MAX_SEQUENCE = (1 << SEQUENCE) - 1   # 4095
-NODE_SHIFT = SEQUENCE                # 12
-TIMESTAMP_SHIFT = NODE_BITS + SEQUENCE  # 22
+MAX_SEQUENCE = (1 << SEQUENCE_BITS) - 1   # 4095
+NODE_SHIFT = SEQUENCE_BITS                # 12
+TIMESTAMP_SHIFT = NODE_BITS + SEQUENCE_BITS  # 22
 
-# Shared state
+# Global shared state
 last_timestamp = -1
 sequence = 0
 
@@ -18,7 +18,11 @@ lock = threading.Lock()
 
 # Configuration
 node_id = 1
-starting_time = 1710000000000  # Custom epoch (e.g., March 2024)
+starting_time = 1710000000000  # Custom epoch
+
+# Mock thread ID handling like original threading algo
+def get_thread_id():
+    return threading.get_ident() % (1 << 6)  # 6 bits = max 64 thread IDs
 
 def current_millis():
     return int(time.time() * 1000)
@@ -29,7 +33,6 @@ def generate_snowflake_id():
     with lock:
         current_ts = current_millis()
 
-        # Handle clock rollback
         if current_ts < last_timestamp:
             wait_ms = last_timestamp - current_ts
             time.sleep(wait_ms / 1000.0)
@@ -40,7 +43,6 @@ def generate_snowflake_id():
         if current_ts == last_timestamp:
             sequence = (sequence + 1) & MAX_SEQUENCE
             if sequence == 0:
-                # Sequence exhausted; wait for next millisecond
                 while current_ts <= last_timestamp:
                     current_ts = current_millis()
         else:
