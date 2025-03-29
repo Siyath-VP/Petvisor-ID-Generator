@@ -53,6 +53,13 @@ def generate_snowflake_id():
         snowflake_id = ((current_ts - starting_time) << TIMESTAMP_SHIFT) | (node_id << NODE_SHIFT) | sequence
         return snowflake_id
 
+# New helper function for bulk ID generation
+def generate_ids(count):
+    """
+    Generate a list of `count` snowflake IDs.
+    """
+    return [generate_snowflake_id() for _ in range(count)]
+
 # Example usage
 if __name__ == "__main__":
     new_id = generate_snowflake_id()
