@@ -29,6 +29,7 @@ class TestThreadSnowflakeID(unittest.TestCase):
             new_id = generate_snowflake_id()
             self.assertGreater(new_id, last_id, "ID not strictly increasing!")
             last_id = new_id
+            print(last_id, new_id)
 
     def test_thread_safety(self):
         """Ensure IDs are unique across multiple threads"""
@@ -37,13 +38,14 @@ class TestThreadSnowflakeID(unittest.TestCase):
         threads = []
 
         def generate_ids():
-            local_ids = [generate_snowflake_id() for _ in range(300)]
+            local_ids = [generate_snowflake_id() for _ in range(100)]
             with lock:
                 for _id in local_ids:
                     self.assertFalse(_id in generated_ids, "Duplicate ID across threads!")
                     generated_ids.add(_id)
+                    print(_id)
 
-        for _ in range(10):  # 10 threads × 300 = 3000 IDs
+        for _ in range(50):  # 10 threads × 300 = 3000 IDs
             t = threading.Thread(target=generate_ids)
             threads.append(t)
             t.start()
@@ -51,7 +53,7 @@ class TestThreadSnowflakeID(unittest.TestCase):
         for t in threads:
             t.join()
 
-        self.assertEqual(len(generated_ids), 3000, "Not all IDs were unique!")
+        self.assertEqual(len(generated_ids), 5000, "Not all IDs were unique!")
 
     def test_id_structure(self):
         """Verify that bit fields are within their valid ranges"""

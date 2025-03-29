@@ -29,14 +29,14 @@ class TestSnowflakeIDGenerator(unittest.TestCase):
         lock = threading.Lock()
 
         def generate_in_thread():
-            local_ids = [generate_snowflake_id() for _ in range(200)]
+            local_ids = [generate_snowflake_id() for _ in range(100)]
             with lock:
                 for _id in local_ids:
                     self.assertNotIn(_id, results)
                     results.add(_id)
-                    print(_id)
+                    #print(_id)
 
-        for _ in range(10):
+        for _ in range(50):
             t = threading.Thread(target=generate_in_thread)
             threads.append(t)
             t.start()
@@ -44,7 +44,7 @@ class TestSnowflakeIDGenerator(unittest.TestCase):
         for t in threads:
             t.join()
 
-        self.assertEqual(len(results), 2000)
+        self.assertEqual(len(results), 5000)
 
     def test_id_structure(self):
         """Check whether the node ID and sequence bits fall within range"""
