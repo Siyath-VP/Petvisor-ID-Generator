@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Snowflake ID Generator</title>
+  <link rel="stylesheet" href="static/css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="container">
+    <h1>Snowflake ID Generator</h1>
+
+    <div class="controls-container">
+      <!-- Method Selection -->
+      <div class="control-card">
+        <h2>Generation Method</h2>
+        <div class="radio-option">
+          <input type="radio" id="threading-algo" name="method" value="ThreadingAlgo" checked />
+          <label for="threading-algo">Thread Lock (ThreadingAlgo)</label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" id="direct-generate" name="method" value="DirectGenerate" />
+          <label for="direct-generate">Thread ID (DirectGenerate)</label>
+        </div>
+        <div class="actions">
+          <button id="generate-btn">Generate IDs</button>
+          <button id="run-tests-btn">Run Tests</button>
+        </div>
+      </div>
+
+      <!-- Configuration -->
+      <div class="control-card">
+        <h2>Configuration</h2>
+        <label for="num_threads">Number of Threads:
+          <input type="number" id="num_threads" min="1" value="1" />
+        </label>
+        <label for="requests_per_thread">Requests per Thread:
+          <input type="number" id="requests_per_thread" min="1" value="1" />
+        </label>
+
+        <div class="direct-config" id="direct-config" style="display: none;">
+          <h3>DirectGenerate Bit Allocation</h3>
+          <label for="thread_bits">Thread Bits:
+            <input type="number" id="thread_bits" min="1" value="6" />
+          </label>
+          <label for="node_bits">Node Bits:
+            <input type="number" id="node_bits" min="1" value="7" />
+          </label>
+          <label for="sequence_bits">Sequence Bits:
+            <input type="number" id="sequence_bits" min="1" value="9" />
+          </label>
+          <p id="max_threads_info"></p>
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <div class="control-card">
+        <h2>Statistics</h2>
+        <div class="stats-item">
+          <span class="stats-label">Total IDs:</span>
+          <span class="stats-value" id="total-ids">0</span>
+        </div>
+        <div class="stats-item">
+          <span class="stats-label">Unique IDs:</span>
+          <span class="stats-value" id="unique-ids">0</span>
+        </div>
+        <div class="stats-item">
+          <span class="stats-label">Duplicate IDs:</span>
+          <span class="stats-value" id="duplicate-ids">0</span>
+        </div>
+          <div class="stats-item" id="duplicate-percentage-container" style="display: none;">
+            <span class="stats-label">Duplicate %:</span>
+            <span class="stats-value duplicate-percentage" id="duplicate-percentage">0%</span>
+          </div>
+      </div>
+    </div>
+
+
+    <!-- Terminal Outputs -->
+    <div class="terminals-container">
+      <div class="terminal">
+        <h2>Terminal Output</h2>
+        <div class="scrollable-terminal">
+          <div class="terminal-content" id="terminal-output"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Test Output Terminal (Now Below) -->
+    <div class="test-terminal-container">
+      <div class="terminal">
+        <h2>Test Output</h2>
+        <div class="scrollable-terminal">
+          <div class="terminal-content" id="test-output"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="static/js/main.js"></script>
+</body>
+</html>
